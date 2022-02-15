@@ -1,48 +1,46 @@
-<?php require_once 'baglan.php'; ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Ekleme, Silme, Güncelleme</title>
-</head>
-<body>
-		<h1>Ekleme, Silme, Güncelleme</h1>
-	<form action="islem.php" method="POST">
-		<input type="text" required="" name="bilgilerim_ad" placeholder="Adınızı Giriniz...">
-		<input type="text" required="" name="bilgilerim_soyad" placeholder="Soyadınızı Giriniz...">
-		<input type="email" required="" name="bilgilerim_mail" placeholder="Mail Giriniz...">
-		<input type="text" required="" name="bilgilerim_yas" placeholder="Yaş Giriniz...">
-		<button type="submit" name="insertislemi">Formu Gönder</button>
-	</form>
-	<br>
-	<h2>Kayıt Listelesi</h2>
-	<hr>
-	<table style="width: 60%" border="1">
-		<tr>
-			<th>S.NO</th>
-			<th>ID</th>
-			<th>Ad</th>
-			<th>Soyad</th>
-			<th>Mail</th>
-			<th>Yaş</th>
-			<th width="50">İşlemler</th>
-			<th width="50">İşlemler</th>
-		</tr>
+<?php
+include ("baglanti.php");
+?>
+<!doctype html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Untitled Document</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	</head>
+	<body>
 		<?php
-		$bilgilerimsor=$db->prepare("SELECT * from bilgilerim");
-		$bilgilerimsor->execute();
-		$say=0;
-		while($bilgilerimcek=$bilgilerimsor->fetch(PDO::FETCH_ASSOC)) { $say++?>
-			<tr>
-				<td><?php echo $say; ?></td>
-				<td><?php echo $bilgilerimcek['bilgilerim_id'] ?></td>
-				<td><?php echo $bilgilerimcek['bilgilerim_ad'] ?></td>
-				<td><?php echo $bilgilerimcek['bilgilerim_soyad'] ?></td>
-				<td><?php echo $bilgilerimcek['bilgilerim_mail'] ?></td>
-				<td><?php echo $bilgilerimcek['bilgilerim_yas'] ?></td>
-				<td align="center"><a href="duzenle.php?bilgilerim_id=<?php echo $bilgilerimcek['bilgilerim_id'] ?>"><button>Düzenle</button></td></a>
-				<td align="center"><a href="islem.php?bilgilerim_id=<?php echo $bilgilerimcek['bilgilerim_id'] ?>&bilgilerimsil=ok"><button>Sil</button></td></a>
-			</tr>
-		<?php } ?>
-	</table>
-</body>
-</html>
+		$stmt = $db->query("SELECT bilgilerim_id,bilgilerim_ad,bilgilerim_soyad,bilgilerim_telefon FROM bilgiler");
+		$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		?>
+		<div class="container">
+			<table class="table">
+				<thead class=" thead-dark">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Ad</th>
+						<th scope="col">Soyad</th>
+						<th scope="col">Telefon</th>
+						<th scope="col">Düzenle</th>
+						<th scope="col">Sil</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach($user as $key=>$value){ ?>
+						<tr>
+							<td><?php echo $value['bilgilerim_id'] ?></td>
+							<td><?php echo $value['bilgilerim_ad'] ?></td>
+							<td><?php echo $value['bilgilerim_soyad'] ?></td>
+							<td><?php echo $value['bilgilerim_telefon'] ?></td>
+							<td><a href="duzenle.php?bilgilerim_id=<?php echo $value['bilgilerim_id']?>"><button>Düzenle</button></td></a>
+							<td><a href="update.php?bilgilerim_id=<?php echo $value['bilgilerim_id']?>&bilgilerimsil=ok"><button>Sil</button></td></a>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+
+	</body>
+	</html>
